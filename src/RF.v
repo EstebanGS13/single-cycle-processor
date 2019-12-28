@@ -11,7 +11,7 @@ module RF(
 	output [63:0] Reg_Rm
 	);
 	
-	// tam reg x numero de regs
+	// register size x registers
 	reg [63:0] registers [0:31];
 
 	integer i;

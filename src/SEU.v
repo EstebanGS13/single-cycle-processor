@@ -16,16 +16,16 @@ module SEU(
 
 	always @(*) begin
 		case (seu_op)
-			// tipo I
+			// format I
 			2'b00: extended_address <= {52'b0, ALU_immediate};
 			
-			// tipo D
+			// format D
 			2'b01: extended_address <= {{55{DT_address[8]}}, DT_address};
 			
-			// tipo B: BR_address = instruction
+			// format B: BR_address = instruction
 			2'b10: extended_address <= {{36{instruction[25]}}, instruction, 2'b0};
 			
-			// tipo CB
+			// format CB
 			2'b11: extended_address <= {{43{COND_BR_address[18]}}, COND_BR_address, 2'b0};
 		endcase
 	end
