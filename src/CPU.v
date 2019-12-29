@@ -96,7 +96,7 @@ module CPU(
 		.alu_op(alu_op_wire),
 
 		.zero(zero_wire),
-		.address(alu_dmio_wire)
+		.result(alu_dmio_wire)
 	);
 
 	DMIO DMIO_instance(
