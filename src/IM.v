@@ -8,7 +8,7 @@ module IM(
 	reg [31:0] memory [0:511];
 
 	initial
-		$readmemh("instruction_memory.mem", memory);
+		$readmemh("src/instruction_memory.mem", memory);
 
 	assign instruction = memory[address];
 
