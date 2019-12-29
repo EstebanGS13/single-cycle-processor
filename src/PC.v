@@ -2,9 +2,9 @@
 
 module PC(
 	input clk,
-    input [63:0] in_pc,
-    output reg [63:0] pc
-    );
+	input [63:0] in_pc,
+	output reg [63:0] pc
+	);
 	
 	initial
 		pc = 64'b0;

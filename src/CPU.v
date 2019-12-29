@@ -58,20 +58,20 @@ module CPU(
 	);
 
 	CU CU_instance(
-	    .op_code(im_wire[31:21]),
-	    .zero(zero_wire),
+		.op_code(im_wire[31:21]),
+		.zero(zero_wire),
 
-	    .reg_to_loc(reg_to_loc_wire),
-	    .seu_op(seu_op_wire),
-	    .alu_src(alu_src_wire),
-	    .alu_op(alu_op_wire),
-	    .mem_wr(mem_wr_wire),
-	    .mem_to_reg(mem_to_reg_wire),
-	    .reg_wr(reg_wr_wire),
-	    .pc_src(pc_src_wire)
-    );
+		.reg_to_loc(reg_to_loc_wire),
+		.seu_op(seu_op_wire),
+		.alu_src(alu_src_wire),
+		.alu_op(alu_op_wire),
+		.mem_wr(mem_wr_wire),
+		.mem_to_reg(mem_to_reg_wire),
+		.reg_wr(reg_wr_wire),
+		.pc_src(pc_src_wire)
+	);
 
-    RF RF_instance(
+	RF RF_instance(
 		.Rn(im_wire[9:5]),
 		.Rm(rm_mux),
 		.Rd(im_wire[4:0]),
@@ -100,14 +100,14 @@ module CPU(
 	);
 
 	DMIO DMIO_instance(
-	    .address(alu_dmio_wire[12:0]),
-	    .data_write(rf_alu_dmio_wire),
-	    .mem_wr(mem_wr_wire),
-	    .clk(clk),
-	    .switches(switches),
+		.address(alu_dmio_wire[12:0]),
+		.data_write(rf_alu_dmio_wire),
+		.mem_wr(mem_wr_wire),
+		.clk(clk),
+		.switches(switches),
 
-	    .leds(leds),
-	    .data_read(dmio_wire)
-    );
+		.leds(leds),
+		.data_read(dmio_wire)
+	);
 
 endmodule

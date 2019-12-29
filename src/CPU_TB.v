@@ -23,7 +23,6 @@ module CPU_TB;
 	end
 
 	always #20 clk = ~clk;
-	
-      
+
 endmodule
 
