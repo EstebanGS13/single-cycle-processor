@@ -17,7 +17,7 @@ module CPU(
 
 	// CU wires
 	wire zero_wire;
-	wire reg_to_loc_wire;
+	wire reg_2_loc_wire;
 	wire [1:0] seu_op_wire;
 	wire alu_src_wire;
 	wire [2:0] alu_op_wire;
@@ -39,7 +39,7 @@ module CPU(
 	wire [63:0] b_mux;
 	wire [63:0] data_write_mux;
 
-	assign rm_mux = reg_to_loc_wire ? im_wire[4:0] : im_wire[20:16];
+	assign rm_mux = reg_2_loc_wire ? im_wire[4:0] : im_wire[20:16];
 	assign b_mux = alu_src_wire ? extended_addr_wire : rf_alu_dmio_wire;
 	assign pc_mux = pc_src_wire ? adder2 : adder1;
 	assign data_write_mux = mem_to_reg_wire ? dmio_wire : alu_dmio_wire;
@@ -61,7 +61,7 @@ module CPU(
 		.op_code(im_wire[31:21]),
 		.zero(zero_wire),
 
-		.reg_to_loc(reg_to_loc_wire),
+		.reg_2_loc(reg_2_loc_wire),
 		.seu_op(seu_op_wire),
 		.alu_src(alu_src_wire),
 		.alu_op(alu_op_wire),

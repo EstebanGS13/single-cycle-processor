@@ -3,7 +3,7 @@
 module CU(
 	input [10:0] op_code,
 	input zero,
-	output reg reg_to_loc,
+	output reg reg_2_loc,
 	output reg [1:0] seu_op,
 	output reg alu_src,
 	output reg [2:0] alu_op,
@@ -19,7 +19,7 @@ module CU(
 			
 			// B
 			11'b000101zzzzz: begin
-				reg_to_loc <= 1'b0; // dc
+				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b00;
 				alu_src    <= 1'b0; // dc
 				alu_op     <= 3'b000; // dc
@@ -33,7 +33,7 @@ module CU(
 			
 			// CBZ
 			11'b10110100zzz: begin
-				reg_to_loc <= 1'b1;
+				reg_2_loc  <= 1'b1;
 				seu_op     <= 2'b01;
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b111;
@@ -45,7 +45,7 @@ module CU(
 
 			// CBNZ
 			11'b10110101zzz: begin
-				reg_to_loc <= 1'b1;
+				reg_2_loc  <= 1'b1;
 				seu_op     <= 2'b01;
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b111;
@@ -59,7 +59,7 @@ module CU(
 			
 			// ADDI
 			11'b1001000100z: begin
-				reg_to_loc <= 1'b0; // dc
+				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b000;
@@ -71,7 +71,7 @@ module CU(
 
 			// ANDI
 			11'b1001001000z: begin
-				reg_to_loc <= 1'b0; // dc
+				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b010;
@@ -83,7 +83,7 @@ module CU(
 
 			// EORI
 			11'b1101001000z: begin
-				reg_to_loc <= 1'b0; // dc
+				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b100;
@@ -95,7 +95,7 @@ module CU(
 
 			// ORRI
 			11'b1011001000z: begin
-				reg_to_loc <= 1'b0; // dc
+				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b011;
@@ -107,7 +107,7 @@ module CU(
 
 			// SUBI
 			11'b1101000100z: begin
-				reg_to_loc <= 1'b0; // dc
+				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b001;
@@ -121,7 +121,7 @@ module CU(
 			
 			// ADD
 			11'b10001011000: begin
-				reg_to_loc <= 1'b0;
+				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b000;
@@ -133,7 +133,7 @@ module CU(
 
 			// AND
 			11'b10001010000: begin
-				reg_to_loc <= 1'b0;
+				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b010;
@@ -145,7 +145,7 @@ module CU(
 
 			// EOR
 			11'b11001010000: begin
-				reg_to_loc <= 1'b0;
+				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b100;
@@ -157,7 +157,7 @@ module CU(
 
 			// LSL
 			11'b11010011011: begin
-				reg_to_loc <= 1'b0;	// dc
+				reg_2_loc  <= 1'b0;	// dc
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;	// dc
 				alu_op     <= 3'b101;
@@ -169,7 +169,7 @@ module CU(
 
 			// LSR
 			11'b11010011010: begin
-				reg_to_loc <= 1'b0;	// dc
+				reg_2_loc  <= 1'b0;	// dc
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;	// dc
 				alu_op     <= 3'b110;
@@ -181,7 +181,7 @@ module CU(
 
 			// ORR
 			11'b10101010000: begin
-				reg_to_loc <= 1'b0;
+				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b011;
@@ -193,7 +193,7 @@ module CU(
 
 			// SUB
 			11'b11001011000: begin
-				reg_to_loc <= 1'b0;
+				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
 				alu_op     <= 3'b001;
@@ -207,7 +207,7 @@ module CU(
 			
 			// LDUR
 			11'b11111000010: begin
-				reg_to_loc <= 1'b1;
+				reg_2_loc  <= 1'b1;
 				seu_op     <= 2'b11;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b000;
@@ -219,7 +219,7 @@ module CU(
 
 			// STUR
 			11'b11111000000: begin
-				reg_to_loc <= 1'b1;
+				reg_2_loc  <= 1'b1;
 				seu_op     <= 2'b11;
 				alu_src    <= 1'b1;
 				alu_op     <= 3'b000;
