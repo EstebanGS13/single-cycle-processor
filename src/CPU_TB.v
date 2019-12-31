@@ -19,7 +19,7 @@ module CPU_TB;
 	initial begin
 		// Initialize Inputs
 		clk = 0;
-		switches = 2;
+		switches = 3;
 	end
 
 	always #20 clk = ~clk;

@@ -12,7 +12,7 @@ module RF(
 	);
 	
 	// register size x registers
-	reg [63:0] registers [0:31];
+	reg signed [63:0] registers [0:31];
 
 	integer i;
 	initial begin
@@ -26,6 +26,11 @@ module RF(
 	always @(posedge clk) begin
 		if (reg_wr & Rd != 5'b11111)
 			registers[Rd] <= data_write;
+	end
+
+	always @(*) begin
+		for (i = 0; i < 32; i = i+1)
+			$display("%d -- %d", i, registers[i]);
 	end
 
 endmodule
