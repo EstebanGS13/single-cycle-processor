@@ -93,6 +93,7 @@ module CPU(
 	ALU ALU_instance(
 		.A(rf_alu_wire),
 		.B(b_mux),
+		.shamt(im_wire[15:10]),
 		.alu_op(alu_op_wire),
 
 		.zero(zero_wire),
