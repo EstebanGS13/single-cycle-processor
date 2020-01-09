@@ -10,7 +10,7 @@ module CU(
 	output reg mem_wr,
 	output reg mem_to_reg,
 	output reg reg_wr,
-	output reg pc_src
+	output reg [1:0] pc_src
 	);
 
 	always @(*) begin
@@ -23,10 +23,10 @@ module CU(
 				seu_op     <= 2'b00;
 				alu_src    <= 1'b0; // dc
 				alu_op     <= 3'b000; // dc
-				mem_wr     <= 1'b0; // dc
+				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0; // dc
 				reg_wr     <= 1'b0;
-				pc_src     <= 1'b1;
+				pc_src     <= 2'b01;
 			end
 
 			// format CB -----------------------------------
@@ -66,7 +66,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 			// ANDI
@@ -78,7 +78,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 			// EORI
@@ -90,7 +90,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0; 
+				pc_src     <= 2'b00; 
 			end
 
 			// ORRI
@@ -102,7 +102,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0; 
+				pc_src     <= 2'b00; 
 			end
 
 			// SUBI
@@ -114,7 +114,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 			// format R  -----------------------------------
@@ -128,7 +128,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 			// AND
@@ -140,7 +140,19 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
+			end
+
+			// BR
+			11'b11010110000: begin
+				reg_2_loc  <= 1'b1;
+				seu_op     <= 2'b00; // dc
+				alu_src    <= 1'b0; // dc
+				alu_op     <= 3'b000; // dc
+				mem_wr     <= 1'b0;
+				mem_to_reg <= 1'b0;
+				reg_wr     <= 1'b0;
+				pc_src     <= 2'b10;
 			end
 
 			// EOR
@@ -152,7 +164,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0; 
+				pc_src     <= 2'b00; 
 			end
 
 			// LSL
@@ -164,7 +176,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0; 
+				pc_src     <= 2'b00; 
 			end
 
 			// LSR
@@ -176,7 +188,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0; 
+				pc_src     <= 2'b00; 
 			end
 
 			// ORR
@@ -188,7 +200,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0; 
+				pc_src     <= 2'b00; 
 			end
 
 			// SUB
@@ -200,7 +212,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 			// format D -------------------------------
@@ -214,7 +226,7 @@ module CU(
 				mem_wr     <= 1'b0;
 				mem_to_reg <= 1'b1;
 				reg_wr     <= 1'b1;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 			// STUR
@@ -226,7 +238,7 @@ module CU(
 				mem_wr     <= 1'b1;
 				mem_to_reg <= 1'b0; // dc
 				reg_wr     <= 1'b0;
-				pc_src     <= 1'b0;
+				pc_src     <= 2'b00;
 			end
 
 

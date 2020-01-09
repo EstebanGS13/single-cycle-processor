@@ -24,7 +24,7 @@ module CPU(
 	wire mem_wr_wire;
 	wire mem_to_reg_wire;
 	wire reg_wr_wire;
-	wire pc_src_wire;
+	wire [1:0] pc_src_wire;
 
 	// Adders
 	wire [63:0] adder1;
@@ -34,16 +34,25 @@ module CPU(
 	assign adder2 = pc_wire + extended_addr_wire;
 
 	// Muxes
+	reg [63:0] pc_mux;
 	wire [4:0] rm_mux;
-	wire [63:0] pc_mux;
 	wire [63:0] b_mux;
 	wire [63:0] data_write_mux;
 
+	// PC mux
+	always @(*) begin
+		case(pc_src_wire)
+			2'b00: pc_mux <= adder1;
+			2'b01: pc_mux <= adder2;
+			2'b10: pc_mux <= rf_alu_dmio_wire;
+		endcase
+	end
+
 	assign rm_mux = reg_2_loc_wire ? im_wire[4:0] : im_wire[20:16];
 	assign b_mux = alu_src_wire ? extended_addr_wire : rf_alu_dmio_wire;
-	assign pc_mux = pc_src_wire ? adder2 : adder1;
+	// assign pc_mux = pc_src_wire ? adder2 : adder1;
 	assign data_write_mux = mem_to_reg_wire ? dmio_wire : alu_dmio_wire;
-	
+
 	PC PC_instance(
 		.clk(clk),
 		.in_pc(pc_mux),
