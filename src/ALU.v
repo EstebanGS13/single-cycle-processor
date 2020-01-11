@@ -5,8 +5,16 @@ module ALU(
 	input [63:0] B,
 	input [5:0] shamt,
 	input [2:0] alu_op,
+	input set_flags,
+	output reg [63:0] result,
 	output zero,
-	output reg [63:0] result);
+	output reg eq,
+	output reg ne,
+	output reg ge,
+	output reg lt,
+	output reg gt,
+	output reg le
+	);
 	
 	always @(*) begin
 		case(alu_op)
@@ -21,6 +29,17 @@ module ALU(
 		endcase
 	end
 
-	assign zero = (result == 0) ? 1 : 0; // zero is 1 if the result is 0
+	assign zero = result == 0; // zero is 1 if the result is 0
+	
+	always @(result) begin
+		if (set_flags) begin
+			eq <= A == B;
+			ne <= A != B;
+			ge <= A >= B;
+			lt <= A < B;
+			gt <= A > B;
+			le <= A <= B;
+		end
+	end
 
 endmodule

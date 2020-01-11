@@ -2,7 +2,14 @@
 
 module CU(
 	input [10:0] op_code,
+	input [3:0] cond,
 	input zero,
+	input eq,
+	input ne,
+	input ge,
+	input lt,
+	input gt,
+	input le,
 	output reg reg_2_loc,
 	output reg [1:0] seu_op,
 	output reg alu_src,
@@ -10,12 +17,14 @@ module CU(
 	output reg mem_wr,
 	output reg mem_to_reg,
 	output reg reg_wr,
-	output reg [1:0] pc_src
+	output reg [1:0] pc_src,
+	output reg set_flags
 	);
 
 	always @(*) begin
+		set_flags  <= 1'b0;
 		casez (op_code)
-			// format B -----------------------------------
+			// format B -------------------------------------------------------
 			
 			// B
 			11'b000101zzzzz: begin
@@ -29,8 +38,26 @@ module CU(
 				pc_src     <= 2'b01;
 			end
 
-			// format CB -----------------------------------
+			// format CB ------------------------------------------------------
 			
+			// B.cond
+			11'b01010100zzz: begin
+				reg_2_loc  <= 1'b1; // dc
+				seu_op     <= 2'b01;
+				alu_src    <= 1'b0; // dc
+				alu_op     <= 3'b000; // dc
+				mem_wr     <= 1'b0;
+				mem_to_reg <= 1'b0; // dc
+				reg_wr     <= 1'b0;
+
+				if ((cond == 4'b0000 && eq) || (cond == 4'b0001 && ne)
+						|| (cond == 4'b1010 && ge) || (cond == 4'b1011 && lt)
+						|| (cond == 4'b1100 && gt) || (cond == 4'b1101 && le))
+					pc_src <= 2'b01;
+				else
+					pc_src <= 2'b00;
+			end
+
 			// CBZ
 			11'b10110100zzz: begin
 				reg_2_loc  <= 1'b1;
@@ -55,10 +82,10 @@ module CU(
 				pc_src     <= ~zero;
 			end
 
-			// format I ------------------------------------
+			// format I -------------------------------------------------------
 			
-			// ADDI
-			11'b1001000100z: begin
+			// ADDI, ADDIS
+			11'b10z1000100z: begin
 				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
@@ -67,6 +94,7 @@ module CU(
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
 				pc_src     <= 2'b00;
+				set_flags  <= op_code[8];
 			end
 
 			// ANDI
@@ -79,6 +107,19 @@ module CU(
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
 				pc_src     <= 2'b00;
+			end
+
+			// ANDIS
+			11'b1111001000z: begin
+				reg_2_loc  <= 1'b0; // dc
+				seu_op     <= 2'b10;
+				alu_src    <= 1'b1;
+				alu_op     <= 3'b010;
+				mem_wr     <= 1'b0;
+				mem_to_reg <= 1'b0;
+				reg_wr     <= 1'b1;
+				pc_src     <= 2'b00;
+				set_flags  <= 1'b1;
 			end
 
 			// EORI
@@ -105,8 +146,8 @@ module CU(
 				pc_src     <= 2'b00; 
 			end
 
-			// SUBI
-			11'b1101000100z: begin
+			// SUBI, SUBIS
+			11'b11z1000100z: begin
 				reg_2_loc  <= 1'b0; // dc
 				seu_op     <= 2'b10;
 				alu_src    <= 1'b1;
@@ -115,12 +156,13 @@ module CU(
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
 				pc_src     <= 2'b00;
+				set_flags  <= op_code[8];
 			end
 
-			// format R  -----------------------------------
+			// format R  ------------------------------------------------------
 			
-			// ADD
-			11'b10001011000: begin
+			// ADD, ADDS
+			11'b10z01011000: begin
 				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
@@ -129,6 +171,7 @@ module CU(
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
 				pc_src     <= 2'b00;
+				set_flags  <= op_code[8];
 			end
 
 			// AND
@@ -141,6 +184,19 @@ module CU(
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
 				pc_src     <= 2'b00;
+			end
+
+			// ANDS
+			11'b11101010000: begin
+				reg_2_loc  <= 1'b0;
+				seu_op     <= 2'b00; // dc
+				alu_src    <= 1'b0;
+				alu_op     <= 3'b010;
+				mem_wr     <= 1'b0;
+				mem_to_reg <= 1'b0;
+				reg_wr     <= 1'b1;
+				pc_src     <= 2'b00;
+				set_flags  <= 1'b1;
 			end
 
 			// BR
@@ -203,8 +259,8 @@ module CU(
 				pc_src     <= 2'b00; 
 			end
 
-			// SUB
-			11'b11001011000: begin
+			// SUB, SUBS
+			11'b11z01011000: begin
 				reg_2_loc  <= 1'b0;
 				seu_op     <= 2'b00; // dc
 				alu_src    <= 1'b0;
@@ -213,9 +269,10 @@ module CU(
 				mem_to_reg <= 1'b0;
 				reg_wr     <= 1'b1;
 				pc_src     <= 2'b00;
+				set_flags  <= op_code[8];
 			end
 
-			// format D -------------------------------
+			// format D -------------------------------------------------------
 			
 			// LDUR
 			11'b11111000010: begin
@@ -240,7 +297,6 @@ module CU(
 				reg_wr     <= 1'b0;
 				pc_src     <= 2'b00;
 			end
-
 
 		endcase
 	end

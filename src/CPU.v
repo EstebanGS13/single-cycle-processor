@@ -16,7 +16,6 @@ module CPU(
 	wire [63:0] dmio_wire;
 
 	// CU wires
-	wire zero_wire;
 	wire reg_2_loc_wire;
 	wire [1:0] seu_op_wire;
 	wire alu_src_wire;
@@ -25,6 +24,14 @@ module CPU(
 	wire mem_to_reg_wire;
 	wire reg_wr_wire;
 	wire [1:0] pc_src_wire;
+	wire set_flags_wire;
+	wire zero_wire;
+	wire eq_wire;
+	wire ne_wire;
+	wire ge_wire;
+	wire lt_wire;
+	wire gt_wire;
+	wire le_wire;
 
 	// Adders
 	wire [63:0] adder1;
@@ -50,7 +57,6 @@ module CPU(
 
 	assign rm_mux = reg_2_loc_wire ? im_wire[4:0] : im_wire[20:16];
 	assign b_mux = alu_src_wire ? extended_addr_wire : rf_alu_dmio_wire;
-	// assign pc_mux = pc_src_wire ? adder2 : adder1;
 	assign data_write_mux = mem_to_reg_wire ? dmio_wire : alu_dmio_wire;
 
 	PC PC_instance(
@@ -68,7 +74,14 @@ module CPU(
 
 	CU CU_instance(
 		.op_code(im_wire[31:21]),
+		.cond(im_wire[3:0]),
 		.zero(zero_wire),
+		.eq(eq_wire),
+		.ne(ne_wire),
+		.ge(ge_wire),
+		.lt(lt_wire),
+		.gt(gt_wire),
+		.le(le_wire),
 
 		.reg_2_loc(reg_2_loc_wire),
 		.seu_op(seu_op_wire),
@@ -77,7 +90,8 @@ module CPU(
 		.mem_wr(mem_wr_wire),
 		.mem_to_reg(mem_to_reg_wire),
 		.reg_wr(reg_wr_wire),
-		.pc_src(pc_src_wire)
+		.pc_src(pc_src_wire),
+		.set_flags(set_flags_wire)
 	);
 
 	RF RF_instance(
@@ -104,9 +118,16 @@ module CPU(
 		.B(b_mux),
 		.shamt(im_wire[15:10]),
 		.alu_op(alu_op_wire),
+		.set_flags(set_flags_wire),
 
+		.result(alu_dmio_wire),
 		.zero(zero_wire),
-		.result(alu_dmio_wire)
+		.eq(eq_wire),
+		.ne(ne_wire),
+		.ge(ge_wire),
+		.lt(lt_wire),
+		.gt(gt_wire),
+		.le(le_wire)
 	);
 
 	DMIO DMIO_instance(

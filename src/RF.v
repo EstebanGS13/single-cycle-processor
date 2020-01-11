@@ -24,7 +24,7 @@ module RF(
 	assign Reg_Rm = registers[Rm];
 
 	always @(posedge clk) begin
-		if (reg_wr & Rd != 5'b11111)
+		if (reg_wr && (Rd != 31))
 			registers[Rd] <= data_write;
 	end
 
