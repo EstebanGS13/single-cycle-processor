@@ -5,7 +5,8 @@ module RF(
 	input [4:0] Rm,
 	input [4:0] Rd,
 	input [63:0] data_write,
-	input reg_wr,
+	input [63:0] return_address,
+	input [1:0] reg_wr,
 	input clk,
 	output [63:0] Reg_Rn,
 	output [63:0] Reg_Rm
@@ -24,8 +25,10 @@ module RF(
 	assign Reg_Rm = registers[Rm];
 
 	always @(posedge clk) begin
-		if (reg_wr && (Rd != 31))
+		if ((reg_wr == 1) && (Rd != 31))
 			registers[Rd] <= data_write;
+		else if (reg_wr == 2)
+			registers[30] <= return_address;
 	end
 
 	always @(*) begin

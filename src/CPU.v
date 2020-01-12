@@ -22,7 +22,7 @@ module CPU(
 	wire [2:0] alu_op_wire;
 	wire mem_wr_wire;
 	wire mem_to_reg_wire;
-	wire reg_wr_wire;
+	wire [1:0] reg_wr_wire;
 	wire [1:0] pc_src_wire;
 	wire set_flags_wire;
 	wire zero_wire;
@@ -34,11 +34,11 @@ module CPU(
 	wire le_wire;
 
 	// Adders
-	wire [63:0] adder1;
-	wire [63:0] adder2;
+	wire [63:0] pc_adder;
+	wire [63:0] branch_adder;
 	
-	assign adder1 = pc_wire + 4;
-	assign adder2 = pc_wire + extended_addr_wire;
+	assign pc_adder = pc_wire + 4;
+	assign branch_adder = pc_wire + extended_addr_wire;
 
 	// Muxes
 	reg [63:0] pc_mux;
@@ -49,8 +49,8 @@ module CPU(
 	// PC mux
 	always @(*) begin
 		case(pc_src_wire)
-			2'b00: pc_mux <= adder1;
-			2'b01: pc_mux <= adder2;
+			2'b00: pc_mux <= pc_adder;
+			2'b01: pc_mux <= branch_adder;
 			2'b10: pc_mux <= rf_alu_dmio_wire;
 		endcase
 	end
@@ -99,6 +99,7 @@ module CPU(
 		.Rm(rm_mux),
 		.Rd(im_wire[4:0]),
 		.data_write(data_write_mux),
+		.return_address(pc_adder),
 		.reg_wr(reg_wr_wire),
 		.clk(clk),
 
