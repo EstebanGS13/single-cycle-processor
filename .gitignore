@@ -240,5 +240,5 @@ _xmsgs/
 !*.xmp
 
 isim
-
+!*.md
 # End of https://www.gitignore.io/api/xilinx,xilinxise,xilinxvivado
